@@ -1,0 +1,17 @@
+{
+    "default-internal-time":900,
+    "email": {
+        "smtp_url": "smtp.gmail.com:587",
+        "sender": "SENDER_ADDRESS",
+        "sender-password": "SENDER_PASSWORD",
+        "receivers": ["RECEIVER_ADDRESS_1", "RECEIVER_ADDRESS_2"]
+    },
+    "base_url": "https://www.pokemoncenter-online.com",
+    "xpath_selector" : {
+        "itemStatus": "//img[@class=\"add_cart_btn\"]",
+        "productName": "//h1[@itemprop=\"name\"]/text()"
+    },
+    "item-to-parse": [
+        "P_CD"
+    ]
+}
