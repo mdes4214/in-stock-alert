@@ -1,5 +1,5 @@
 {
-    "default-internal-time":900,
+    "default-internal-time":300,
     "email": {
         "smtp_url": "smtp.gmail.com:587",
         "sender": "SENDER_ADDRESS",

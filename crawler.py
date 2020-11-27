@@ -207,8 +207,8 @@ def main():
             if is_in_stock is None:
                 continue
             elif is_in_stock != is_in_stocks[i]:
-                old_item_status = 'In Stock' if is_in_stock else 'Sold Out'
-                current_item_status = 'In Stock' if is_in_stocks[i] else 'Sold Out'
+                old_item_status = 'In Stock' if is_in_stocks[i] else 'Sold Out'
+                current_item_status = 'In Stock' if is_in_stock else 'Sold Out'
                 print('[#%02d][%s]: Item Status CHANGE from [%s] to [%s]!! Trying to send email.' %
                       (i, encode_product_name, old_item_status, current_item_status))
                 msg_content = {}
