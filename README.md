@@ -26,7 +26,7 @@ $pip install -r requirements.txt
 - `sender-password` can refer to [[Python實戰應用]Python寄送Gmail電子郵件實作教學](https://www.learncodewithmike.com/2020/02/python-email.html).  
 In the *sender* Google account:  
     1. enable the **Two-step Authentication**.  
-    2. Then generate the **Application Password**.  
+    2. generate the **Application Password**.  
 ![](./images/Gmail.PNG)  
 - `receivers` will be a list of receivers' mail addresses, e.g. `["RECEIVER@gmail.com"]`
 
@@ -37,7 +37,7 @@ In the *sender* Google account:
         "AmazonJP"
     ]
 ```
-`sites` can be set as `PokemonCenter` and 'AmazonJP' in a list.
+- `sites` can be set as `PokemonCenter` and 'AmazonJP' in a list.
 
 ### Target Items (Pokemon Center Online)
 ```
@@ -45,7 +45,7 @@ In the *sender* Google account:
         "P_CD"
     ]
 ```
-`item-to-parse` is a list of the **Product Code**, which can be found in url, e.g. `["4521329284125", "4521329320212"]`.
+- `item-to-parse` is a list of the **Product Code**, which can be found in url, e.g. `["4521329284125", "4521329320212"]`.
 ![](./images/pokemon_center.PNG)  
 
 ### Target Items (Amazon JP)
@@ -54,14 +54,14 @@ In the *sender* Google account:
         "ID"
     ]
 ```
-`item-to-parse` is a list of the **Item ID**, which can be also found in AmazonJP's url, e.g. `["B08JYXPCD2", "B08JZ161C7", "B08JYXDBLZ"]`.
+- `item-to-parse` is a list of the **Item ID**, which can be also found in AmazonJP's url, e.g. `["B08JYXPCD2", "B08JZ161C7", "B08JYXDBLZ"]`.
 ![](./images/amazon_jp.PNG)  
 
 ### Interval Time
 ```
 "default-internal-time":300
 ```
-`default-internal-time` default is set to 300(s).  
+- `default-internal-time` default is set to 300(s).  
 The job will check the items about every 300 seconds.  
 Note that too high frequency may make your IP be banned.
 
