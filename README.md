@@ -3,7 +3,7 @@ Just for personal use and crawler practice.
 This job will send an email when the target items are in stock and out of stock.  
 Currently support Pokemon Center Online( and Amazon JP soon).  
 
-Referenced from GaryniL (https://github.com/GaryniL/Amazon-Price-Alert).
+Refer to GaryniL (https://github.com/GaryniL/Amazon-Price-Alert).
 
 ## Installation
 Same as the reference.
@@ -27,7 +27,7 @@ $pip install -r requirements.txt
 In the *sender* Google account:  
     1. enable the **Two-step Authentication**.  
     2. Then generate the **Application Password**.  
-![](./images/Gmail.PNG)  
+![](./img/Gmail.PNG)  
 - `receivers` will be a list of receivers' mail addresses, e.g. `["RECEIVER@gmail.com"]`
 
 ### Target Items (Pokemon Center Online)
@@ -41,7 +41,7 @@ In the *sender* Google account:
     ]
 ```
 `item-to-parse` is a list of the **Product Code**, which can find in url.
-![](./images/pokemon_center.PNG)  
+![](./img/pokemon_center.PNG)  
 
 ### Target Items (Amazon JP)
 //TODO
@@ -65,4 +65,4 @@ Refer to [在命令提示視窗(Command Prompt)顯示UTF-8內容](https://blog.d
 $chcp 65001
 ```
 Then the title of items can be showed correctly.  
-![](./images/utf8.PNG)  
+![](./img/utf8.PNG)  
