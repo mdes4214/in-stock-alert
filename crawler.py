@@ -85,11 +85,14 @@ def check_date_change(current_date, site_titles):
 def get_item_status(url, item_id, selector, site):
 
     # set random user agent prevent banning
+    params = {}
+    if site == 'AmazonJP':
+        url += item_id
+    elif site == 'PokemonCenter':
+        params['p_cd'] = item_id
     r = requests.get(url,
-                     params={
-                         'p_cd': item_id
-                     },
-                     headers={
+                     params = params,
+                     headers = {
                          'User-Agent':
                          user.random(),
                          'Accept-Language':    'zh-tw',
@@ -106,7 +109,10 @@ def get_item_status(url, item_id, selector, site):
     if product_name_result is None:
         print('Didn\'t find the \'Product Name\' element.')
     else:
-        product_name = product_name_result[0].strip()
+        if site == 'AmazonJP':
+            product_name = product_name_result[0].text.strip()
+        elif site == 'PokemonCenter':
+            product_name = product_name_result[0].strip()
 
     # find Item Status
     try:
@@ -170,7 +176,6 @@ def main():
     sites = config['sites']
     base_urls = []
     xpath_selectors = []
-    items = []
     site_titles = []
     for i in range(len(sites)):
         if sites[i] in config:            
@@ -180,20 +185,7 @@ def main():
                 base_urls.append(config[sites[i]]['base_url'])
                 xpath_selectors.append(config[sites[i]]['xpath_selector'])
                 site_titles.append(sites[i])
-
-    # get initial item status for compare
-    item_status_msg = 'Item Status:\n'
-    for i in range(len(items)):
-        is_in_stock, product_name, item_url = get_item_status(
-            base_urls[i], items[i], xpath_selectors[i], site_titles[i])
-        is_in_stocks.append(is_in_stock)
-        item_status_msg += '%s - id[%s]: %s\n' % (
-            site_titles[i], items[i], 'In Stock!' if is_in_stock else 'Sold Out.')
-    msg_content = {}
-    msg_content['subject'] = '[In Stock Alert] Service is working'
-    msg_content['content'] = 'In Stock Alert is still working until %s !\n\n%s' % (
-        start_date.strftime('%Y-%m-%d %H:%M:%S'), item_status_msg)
-    send_email(msg_content)
+                is_in_stocks.append(False)
 
     while True and len(items):
         current_date = datetime.now()
@@ -203,6 +195,13 @@ def main():
         # send mail everyday to notify service is working
         check_date_change(current_date, site_titles)
 
+        # Aggregate all change in one mail
+        msg_content = {}
+        msg_content['subject'] = '[In Stock Alert] Status CHANGE! '
+        msg_content['content'] = '[%s]' % (current_date_Str)
+        is_send_mail = False
+        
+        # check items
         for i in range(len(items)):
             # url to parse
             print('[#%02d] Checking Item Status of %s - [%s]' %
@@ -211,10 +210,9 @@ def main():
             # get Item Status and Product Name
             is_in_stock, product_name, item_url = get_item_status(
                 base_urls[i], items[i], xpath_selectors[i], site_titles[i])
-            encode_product_name = product_name.encode(
-                encoding="utf-8", errors="strict")
+            encode_product_name = product_name
 
-            # Check if Item Status changed
+            # Check if Item Status changed            
             if is_in_stock is None:
                 continue
             elif is_in_stock != is_in_stocks[i]:
@@ -222,17 +220,22 @@ def main():
                 current_item_status = 'In Stock' if is_in_stock else 'Sold Out'
                 print('[#%02d][%s][%s]: Item Status CHANGE from [%s] to [%s]!! Trying to send email.' %
                       (i, site_titles[i], encode_product_name, old_item_status, current_item_status))
-                msg_content = {}
-                msg_content['subject'] = '[In Stock Alert] [%s][%s] Status CHANGE to [%s]' % (
-                    site_titles[i], encode_product_name, current_item_status)
-                msg_content['content'] = '[%s]\nItem Status CHANGE from [%s] to [%s]!!\nURL to salepage: %s' % (
-                    current_date_Str, old_item_status, current_item_status, item_url)
-                send_email(msg_content)
+                msg_content['subject'] += '[%s]' % (site_titles[i])
+                msg_content['content'] += '\n\n[%s][%s]\nItem Status CHANGE from [%s] to [%s]!!\nURL to salepage: %s' % (
+                    site_titles[i], encode_product_name, old_item_status, current_item_status, item_url)
+
+                is_send_mail = True
                 is_in_stocks[i] = is_in_stock
             else:
                 old_item_status = 'In Stock' if is_in_stock else 'Sold Out'
                 print('[#%02d][%s][%s]: Item Status no change (still is [%s]). Ignoring...' %
                       (i, site_titles[i], encode_product_name, old_item_status))
+        
+        # send summary mail
+        if is_send_mail:
+            msg_content['content'] = msg_content['content'].encode(
+                encoding="utf-8", errors="strict")
+            send_email(msg_content)
 
         # add random number to interval check time for preventing banning
         random_interval_check_time = interval_check_time + \
