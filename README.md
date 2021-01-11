@@ -40,7 +40,7 @@ In the *sender* Google account:
         "P_CD"
     ]
 ```
-`item-to-parse` is a list of the **Product Code**, which can find in url.
+`item-to-parse` is a list of the **Product Code**, which can find in url, e.g. `["4521329320212"]`
 ![](./img/pokemon_center.PNG)  
 
 ### Target Items (Amazon JP)
