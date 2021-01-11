@@ -1,5 +1,6 @@
 {
-    "email": {
+    "default-internal-time":900,
+	"email": {
         "smtp_url": "smtp.gmail.com:587",
         "sender": "SENDER_ADDRESS",
         "sender-password": "SENDER_PASSWORD",
@@ -10,7 +11,6 @@
 		"AmazonJP"
 	],
 	"PokemonCenter": {
-		"default-internal-time":300,
 		"base_url": "https://www.pokemoncenter-online.com",
 		"xpath_selector" : {
 			"itemStatus": "//img[@class=\"add_cart_btn\"]",
@@ -20,8 +20,7 @@
 			"P_CD"
 		]
 	},
-	"AmazonJP": {
-		"default-internal-time":900,
+	"AmazonJP": {		
 		"base_url": "https://www.amazon.co.jp/dp/",
 		"xpath_selector" : {
 			"itemStatus": "//*[@id='priceblock_ourprice']",
