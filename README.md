@@ -30,11 +30,16 @@ In the *sender* Google account:
 ![](./images/Gmail.PNG)  
 - `receivers` will be a list of receivers' mail addresses, e.g. `["RECEIVER@gmail.com"]`
 
+### Site
+```
+"sites": [
+        "PokemonCenter",
+        "AmazonJP"
+    ]
+```
+`sites` can be set as `PokemonCenter` and 'AmazonJP' in a list.
+
 ### Target Items (Pokemon Center Online)
-```
-"base_url": "https://www.pokemoncenter-online.com"
-```
-`base_url` is fixed as the Pokemon Center Online host url.
 ```
 "item-to-parse": [
         "P_CD"
@@ -44,7 +49,13 @@ In the *sender* Google account:
 ![](./images/pokemon_center.PNG)  
 
 ### Target Items (Amazon JP)
-//TODO
+```
+"item-to-parse": [
+        "ID"
+    ]
+```
+`item-to-parse` is a list of the **Item ID**, which can also find in AmazonJP's url.
+![](./images/amazon_jp.PNG)  
 
 ### Interval Time
 ```
