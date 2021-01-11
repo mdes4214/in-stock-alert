@@ -1,7 +1,7 @@
 # InStockAlert
 Just for personal use and crawler practice.  
 This job will send an email when the target items are in stock and out of stock.  
-Currently support Pokemon Center Online( and Amazon JP soon).  
+Currently support Pokemon Center Online.  
 
 Refer to GaryniL (https://github.com/GaryniL/Amazon-Price-Alert).
 
@@ -42,9 +42,6 @@ In the *sender* Google account:
 ```
 `item-to-parse` is a list of the **Product Code**, which can find in url, e.g. `["4521329320212"]`
 ![](./img/pokemon_center.PNG)  
-
-### Target Items (Amazon JP)
-//TODO
 
 ### Interval Time
 ```
