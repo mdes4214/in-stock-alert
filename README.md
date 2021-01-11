@@ -1,7 +1,7 @@
 # InStockAlert
 Just for personal use and crawler practice.  
 This job will send an email when the target items are in stock and out of stock.  
-Currently support Pokemon Center Online( and Amazon JP soon).  
+Currently support Pokemon Center Online and Amazon JP.  
 
 Referenced from GaryniL (https://github.com/GaryniL/Amazon-Price-Alert).
 
