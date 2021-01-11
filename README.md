@@ -45,7 +45,7 @@ In the *sender* Google account:
         "P_CD"
     ]
 ```
-`item-to-parse` is a list of the **Product Code**, which can find in url.
+`item-to-parse` is a list of the **Product Code**, which can find in url, e.g. `["4521329284125", "4521329320212"]`.
 ![](./images/pokemon_center.PNG)  
 
 ### Target Items (Amazon JP)
@@ -54,7 +54,7 @@ In the *sender* Google account:
         "ID"
     ]
 ```
-`item-to-parse` is a list of the **Item ID**, which can also find in AmazonJP's url.
+`item-to-parse` is a list of the **Item ID**, which can also find in AmazonJP's url, e.g. `["B08JYXPCD2", "B08JZ161C7", "B08JYXDBLZ"]`.
 ![](./images/amazon_jp.PNG)  
 
 ### Interval Time
