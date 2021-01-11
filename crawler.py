@@ -60,7 +60,7 @@ def send_email(msg_content):
 # send notified mail once a day.
 
 
-def check_date_change(current_date):
+def check_date_change(current_date, site_titles):
     global items
     global is_in_stocks
     global start_date
@@ -72,17 +72,17 @@ def check_date_change(current_date):
 
         item_status_msg = 'Item Status:\n'
         for i in range(len(items)):
-            item_status_msg += 'id[%s]: %s\n' % (
-                items[i], 'In Stock!' if is_in_stocks[i] else 'Sold Out.')
+            item_status_msg += '%s - id[%s]: %s\n' % (
+                site_titles[i], items[i], 'In Stock!' if is_in_stocks[i] else 'Sold Out.')
 
         msg_content = {}
-        msg_content['subject'] = '[Pokemon Center Alert] Service is working'
-        msg_content['content'] = 'Pokemon Center Alert is still working until %s !\n\n%s' % (
+        msg_content['subject'] = '[In Stock Alert] Service is working'
+        msg_content['content'] = 'In Stock Alert is still working until %s !\n\n%s' % (
             current_date.strftime('%Y-%m-%d %H:%M:%S'), item_status_msg)
         send_email(msg_content)
 
 
-def get_item_status(url, item_id, selector):
+def get_item_status(url, item_id, selector, site):
 
     # set random user agent prevent banning
     r = requests.get(url,
@@ -122,9 +122,9 @@ def get_item_status(url, item_id, selector):
         # be banned, send mail then shut down
         # send mail notifying server shutdown
         msg_content = {}
-        msg_content['subject'] = '[Pokemon Center Alert] Service has be BANNED'
-        msg_content['content'] = 'Pokemon Center Alert has be banned at %s !' % (
-            datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+        msg_content['subject'] = '[In Stock Alert] Service has be BANNED by %s' % (site)
+        msg_content['content'] = 'In Stock Alert has be banned by %s at %s !' % (
+            site, datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
         send_email(msg_content)
         return None, product_name, r.url
 
@@ -165,23 +165,33 @@ def main():
     config = get_config(args.config)
     email_info = config['email']
     interval_check_time = config['default-internal-time']
-    base_url = config['base_url']
-    xpath_selector = config['xpath_selector']
 
-    # get all items to parse
-    items = config['item-to-parse']
+    # get config by site
+    sites = config['sites']
+    base_urls = []
+    xpath_selectors = []
+    items = []
+    site_titles = []
+    for i in range(len(sites)):
+        if sites[i] in config:            
+            items_site = config[sites[i]]['item-to-parse']
+            items.extend(items_site)
+            for j in range(len(items_site)):
+                base_urls.append(config[sites[i]]['base_url'])
+                xpath_selectors.append(config[sites[i]]['xpath_selector'])
+                site_titles.append(sites[i])
 
     # get initial item status for compare
     item_status_msg = 'Item Status:\n'
     for i in range(len(items)):
         is_in_stock, product_name, item_url = get_item_status(
-            base_url, items[i], xpath_selector)
+            base_urls[i], items[i], xpath_selectors[i], site_titles[i])
         is_in_stocks.append(is_in_stock)
-        item_status_msg += 'id[%s]: %s\n' % (
-            items[i], 'In Stock!' if is_in_stock else 'Sold Out.')
+        item_status_msg += '%s - id[%s]: %s\n' % (
+            site_titles[i], items[i], 'In Stock!' if is_in_stock else 'Sold Out.')
     msg_content = {}
-    msg_content['subject'] = '[Pokemon Center Alert] Service is working'
-    msg_content['content'] = 'Pokemon Center Alert is still working until %s !\n\n%s' % (
+    msg_content['subject'] = '[In Stock Alert] Service is working'
+    msg_content['content'] = 'In Stock Alert is still working until %s !\n\n%s' % (
         start_date.strftime('%Y-%m-%d %H:%M:%S'), item_status_msg)
     send_email(msg_content)
 
@@ -191,17 +201,18 @@ def main():
         print ('[%s] Start Checking' % (current_date_Str))
 
         # send mail everyday to notify service is working
-        check_date_change(current_date)
+        check_date_change(current_date, site_titles)
 
         for i in range(len(items)):
             # url to parse
-            print('[#%02d] Checking Item Status of [%s]' %
-                  (i, items[i]))
+            print('[#%02d] Checking Item Status of %s - [%s]' %
+                  (i, site_titles[i], items[i]))
 
             # get Item Status and Product Name
             is_in_stock, product_name, item_url = get_item_status(
-                base_url, items[i], xpath_selector)
-            encode_product_name = product_name.encode(encoding="utf-8", errors="strict")
+                base_urls[i], items[i], xpath_selectors[i], site_titles[i])
+            encode_product_name = product_name.encode(
+                encoding="utf-8", errors="strict")
 
             # Check if Item Status changed
             if is_in_stock is None:
@@ -209,19 +220,19 @@ def main():
             elif is_in_stock != is_in_stocks[i]:
                 old_item_status = 'In Stock' if is_in_stocks[i] else 'Sold Out'
                 current_item_status = 'In Stock' if is_in_stock else 'Sold Out'
-                print('[#%02d][%s]: Item Status CHANGE from [%s] to [%s]!! Trying to send email.' %
-                      (i, encode_product_name, old_item_status, current_item_status))
+                print('[#%02d][%s][%s]: Item Status CHANGE from [%s] to [%s]!! Trying to send email.' %
+                      (i, site_titles[i], encode_product_name, old_item_status, current_item_status))
                 msg_content = {}
-                msg_content['subject'] = '[Pokemon Center Alert] [%s] Status CHANGE to [%s]' % (
-                    encode_product_name, current_item_status)
+                msg_content['subject'] = '[In Stock Alert] [%s][%s] Status CHANGE to [%s]' % (
+                    site_titles[i], encode_product_name, current_item_status)
                 msg_content['content'] = '[%s]\nItem Status CHANGE from [%s] to [%s]!!\nURL to salepage: %s' % (
                     current_date_Str, old_item_status, current_item_status, item_url)
                 send_email(msg_content)
                 is_in_stocks[i] = is_in_stock
             else:
                 old_item_status = 'In Stock' if is_in_stock else 'Sold Out'
-                print('[#%02d][%s]: Item Status no change (still is [%s]). Ignoring...' %
-                      (i, encode_product_name, old_item_status))
+                print('[#%02d][%s][%s]: Item Status no change (still is [%s]). Ignoring...' %
+                      (i, site_titles[i], encode_product_name, old_item_status))
 
         # add random number to interval check time for preventing banning
         random_interval_check_time = interval_check_time + \
