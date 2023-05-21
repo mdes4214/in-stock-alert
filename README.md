@@ -37,7 +37,7 @@ In the *sender* Google account:
         "AmazonJP"
     ]
 ```
-- `sites` can be set as `PokemonCenter` and 'AmazonJP' in a list.
+- `sites` can be set as `PokemonCenter` or `AmazonJP` in a list.
 
 ### Target Items (Pokemon Center Online)
 ```
