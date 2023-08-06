@@ -77,3 +77,10 @@ $chcp 65001
 ```
 Then the title of items can be showed correctly.  
 ![](./images/utf8.PNG)  
+
+If the cmd shows the error `LookupError: unknown encoding: cp65001`, you can set the encoding of Python to `UTF-8` (in the same terminal).
+```
+$set PYTHONIOENCODING=UTF-8
+```
+Refer to [Python 2.7 : LookupError: unknown encoding: cp65001 - Stack Overflow](https://stackoverflow.com/questions/35176270/python-2-7-lookuperror-unknown-encoding-cp65001)
+
