@@ -53,7 +53,7 @@ def send_email(msg_content):
             content['from'] = email_info['sender']
             content['to'] = receiver
 
-            content.attach(MIMEText(msg_content['content'], 'plain'))
+            content.attach(MIMEText(msg_content['content'].encode('utf8'), 'plain'))
             smtp.sendmail(email_info['sender'], receiver, content.as_string())
             print('[Mail]\tMessage has been sent to %s.' % (receiver))
 
